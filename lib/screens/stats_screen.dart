@@ -24,7 +24,8 @@ class StatsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final progress = ref.watch(progressNotifierProvider);
-    final allWords = ref.watch(allWordsProvider).valueOrNull ?? const <String, Word>{};
+    final allWords =
+        ref.watch(allWordsProvider).valueOrNull ?? const <String, Word>{};
     final s = tabletScale(context);
 
     final entries = progress.entries.values.toList()
@@ -32,9 +33,13 @@ class StatsScreen extends ConsumerWidget {
 
     final problematic = entries.toList()
       ..sort((a, b) => b.totalMistakes.compareTo(a.totalMistakes));
-    final top5Problematic =
-        problematic.where((e) => e.totalMistakes > 0).take(5).toList();
-    final maxMistakes = top5Problematic.isEmpty ? 1 : top5Problematic.first.totalMistakes;
+    final top5Problematic = problematic
+        .where((e) => e.totalMistakes > 0)
+        .take(5)
+        .toList();
+    final maxMistakes = top5Problematic.isEmpty
+        ? 1
+        : top5Problematic.first.totalMistakes;
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -64,7 +69,9 @@ class StatsScreen extends ConsumerWidget {
                       for (final e in top5Problematic)
                         _ProblematicCard(
                           entry: e,
-                          word: allWords[e.wordKey] ?? allWords['standard:${e.wordKey}'],
+                          word:
+                              allWords[e.wordKey] ??
+                              allWords['standard:${e.wordKey}'],
                           maxMistakes: maxMistakes,
                         ),
                     ],
@@ -80,7 +87,12 @@ class StatsScreen extends ConsumerWidget {
                       childAspectRatio: 2.4,
                       children: [
                         for (final e in entries)
-                          _WordCard(entry: e, word: allWords[e.wordKey] ?? allWords['standard:${e.wordKey}']),
+                          _WordCard(
+                            entry: e,
+                            word:
+                                allWords[e.wordKey] ??
+                                allWords['standard:${e.wordKey}'],
+                          ),
                       ],
                     ),
                   ],
@@ -95,7 +107,9 @@ class StatsScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Сбросить прогресс?'),
-        content: const Text('Вся статистика будет удалена. Это нельзя отменить.'),
+        content: const Text(
+          'Вся статистика будет удалена. Это нельзя отменить.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
@@ -188,7 +202,10 @@ class _Summary extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _StatItem(label: 'Раундов', value: '$totalRounds'),
-                    _StatItem(label: 'Слов', value: '${progress.entries.length}'),
+                    _StatItem(
+                      label: 'Слов',
+                      value: '${progress.entries.length}',
+                    ),
                     _StatItem(label: 'Звёзд', value: '$totalStars'),
                   ],
                 ),
@@ -343,8 +360,8 @@ class _ProblematicCard extends StatelessWidget {
     final indicatorColor = ratio > 0.7
         ? AppTheme.secondary
         : ratio > 0.4
-            ? AppTheme.sunshine
-            : AppTheme.success;
+        ? AppTheme.sunshine
+        : AppTheme.success;
     final worst = entry.mistakesPerSyllable.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
@@ -394,7 +411,10 @@ class _ProblematicCard extends StatelessWidget {
             ),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8 * s, vertical: 12 * s),
+              padding: EdgeInsets.symmetric(
+                horizontal: 8 * s,
+                vertical: 12 * s,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -409,7 +429,10 @@ class _ProblematicCard extends StatelessWidget {
                   Text(
                     'ошибок: ${entry.totalMistakes}'
                     '${worst.isNotEmpty ? " · ${worst.take(3).map((e) => '${e.key}:${e.value}').join(', ')}" : ""}',
-                    style: TextStyle(fontSize: 12 * s, color: AppTheme.textMuted),
+                    style: TextStyle(
+                      fontSize: 12 * s,
+                      color: AppTheme.textMuted,
+                    ),
                   ),
                 ],
               ),

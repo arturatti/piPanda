@@ -130,23 +130,24 @@ class _CelebrationOverlayState extends State<CelebrationOverlay> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Mascot(pose: _mascotPose(stars), size: 140)
-                    .animate()
-                    .scale(
-                      begin: const Offset(0, 0),
-                      end: const Offset(1, 1),
-                      curve: Curves.elasticOut,
-                      duration: 600.ms,
-                    ),
+                Mascot(pose: _mascotPose(stars), size: 140).animate().scale(
+                  begin: const Offset(0, 0),
+                  end: const Offset(1, 1),
+                  curve: Curves.elasticOut,
+                  duration: 600.ms,
+                ),
                 const SizedBox(height: 8),
                 Text(
-                  _title(stars),
-                  style: const TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.w800,
-                    color: AppTheme.textDark,
-                  ),
-                ).animate(delay: 150.ms).fadeIn(duration: 300.ms).moveY(begin: 8, end: 0),
+                      _title(stars),
+                      style: const TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w800,
+                        color: AppTheme.textDark,
+                      ),
+                    )
+                    .animate(delay: 150.ms)
+                    .fadeIn(duration: 300.ms)
+                    .moveY(begin: 8, end: 0),
                 const SizedBox(height: 16),
                 StarRow(
                   filled: stars,

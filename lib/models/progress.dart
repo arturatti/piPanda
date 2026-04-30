@@ -12,11 +12,11 @@ class ProgressEntry {
   });
 
   factory ProgressEntry.empty(String wordKey) => ProgressEntry(
-        wordKey: wordKey,
-        plays: 0,
-        mistakesPerSyllable: const {},
-        stars: const [],
-      );
+    wordKey: wordKey,
+    plays: 0,
+    mistakesPerSyllable: const {},
+    stars: const [],
+  );
 
   ProgressEntry addRound({
     required Map<String, int> mistakes,
@@ -41,20 +41,20 @@ class ProgressEntry {
       mistakesPerSyllable.values.fold(0, (sum, n) => sum + n);
 
   Map<String, dynamic> toJson() => {
-        'wordKey': wordKey,
-        'plays': plays,
-        'mistakes': mistakesPerSyllable,
-        'stars': stars,
-      };
+    'wordKey': wordKey,
+    'plays': plays,
+    'mistakes': mistakesPerSyllable,
+    'stars': stars,
+  };
 
   factory ProgressEntry.fromJson(Map<String, dynamic> json) => ProgressEntry(
-        wordKey: json['wordKey'] as String,
-        plays: json['plays'] as int,
-        mistakesPerSyllable: Map<String, int>.from(
-          (json['mistakes'] as Map?) ?? const <String, int>{},
-        ),
-        stars: List<int>.from((json['stars'] as List?) ?? const <int>[]),
-      );
+    wordKey: json['wordKey'] as String,
+    plays: json['plays'] as int,
+    mistakesPerSyllable: Map<String, int>.from(
+      (json['mistakes'] as Map?) ?? const <String, int>{},
+    ),
+    stars: List<int>.from((json['stars'] as List?) ?? const <int>[]),
+  );
 }
 
 class OverallProgress {
@@ -92,10 +92,10 @@ class OverallProgress {
   }
 
   Map<String, dynamic> toJson() => {
-        'entries': entries.map((k, v) => MapEntry(k, v.toJson())),
-        'totalSessions': totalSessions,
-        'totalRounds': totalRounds,
-      };
+    'entries': entries.map((k, v) => MapEntry(k, v.toJson())),
+    'totalSessions': totalSessions,
+    'totalRounds': totalRounds,
+  };
 
   factory OverallProgress.fromJson(Map<String, dynamic> json) {
     final rawEntries = (json['entries'] as Map?) ?? const <String, dynamic>{};

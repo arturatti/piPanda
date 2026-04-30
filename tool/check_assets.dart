@@ -41,7 +41,9 @@ void main() {
 
       final wordKey = _transliterate(word.toLowerCase());
       if (!_audioExists('assets/audio/words/$wordKey')) {
-        missingWordAudio.add('  [$setDir] $word -> assets/audio/words/$wordKey.{mp3,wav,m4a,ogg}');
+        missingWordAudio.add(
+          '  [$setDir] $word -> assets/audio/words/$wordKey.{mp3,wav,m4a,ogg}',
+        );
       }
 
       for (final s in syllables) {
@@ -54,7 +56,9 @@ void main() {
   for (final s in allSyllables) {
     final key = _transliterate(s.toLowerCase());
     if (!_audioExists('assets/audio/syllables/$key')) {
-      missingSyllableAudio.add('  $s -> assets/audio/syllables/$key.{mp3,wav,m4a,ogg}');
+      missingSyllableAudio.add(
+        '  $s -> assets/audio/syllables/$key.{mp3,wav,m4a,ogg}',
+      );
     }
   }
 
@@ -77,7 +81,8 @@ void main() {
   _report('Missing syllable audio', missingSyllableAudio);
   _report('Missing UI sounds', missingUi);
 
-  final totalMissing = missingImages.length +
+  final totalMissing =
+      missingImages.length +
       missingWordAudio.length +
       missingSyllableAudio.length +
       missingUi.length;
@@ -103,12 +108,39 @@ void _report(String title, List<String> missing) {
 }
 
 const Map<String, String> _map = {
-  'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e',
-  'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i', 'й': 'j', 'к': 'k',
-  'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r',
-  'с': 's', 'т': 't', 'у': 'u', 'ф': 'f', 'х': 'h', 'ц': 'ts',
-  'ч': 'ch', 'ш': 'sh', 'щ': 'sch', 'ъ': '', 'ы': 'y', 'ь': '',
-  'э': 'e', 'ю': 'yu', 'я': 'ya',
+  'а': 'a',
+  'б': 'b',
+  'в': 'v',
+  'г': 'g',
+  'д': 'd',
+  'е': 'e',
+  'ё': 'yo',
+  'ж': 'zh',
+  'з': 'z',
+  'и': 'i',
+  'й': 'j',
+  'к': 'k',
+  'л': 'l',
+  'м': 'm',
+  'н': 'n',
+  'о': 'o',
+  'п': 'p',
+  'р': 'r',
+  'с': 's',
+  'т': 't',
+  'у': 'u',
+  'ф': 'f',
+  'х': 'h',
+  'ц': 'ts',
+  'ч': 'ch',
+  'ш': 'sh',
+  'щ': 'sch',
+  'ъ': '',
+  'ы': 'y',
+  'ь': '',
+  'э': 'e',
+  'ю': 'yu',
+  'я': 'ya',
 };
 
 bool _audioExists(String basePath) {

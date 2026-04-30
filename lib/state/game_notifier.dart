@@ -12,17 +12,19 @@ import 'package:syllables_apk/services/audio_service.dart';
 const int _hintThreshold = 3;
 const int _roundsPerSession = 5;
 
-typedef RoundResultCallback = void Function({
-  required Word word,
-  required Map<String, int> mistakesPerSyllable,
-  required int stars,
-});
+typedef RoundResultCallback =
+    void Function({
+      required Word word,
+      required Map<String, int> mistakesPerSyllable,
+      required int stars,
+    });
 
 class GameNotifier extends StateNotifier<RoundState?> {
   final List<Word> _words;
   final SyllablePool _pool;
   final AudioService _audio;
   final GameMode _mode;
+  final int _totalSyllables;
   final RoundResultCallback? _onRoundFinished;
   final Random _random = Random();
   Word? _previousWord;
@@ -32,13 +34,15 @@ class GameNotifier extends StateNotifier<RoundState?> {
     required SyllablePool pool,
     required AudioService audio,
     required GameMode mode,
+    required int totalSyllables,
     RoundResultCallback? onRoundFinished,
-  })  : _words = words,
-        _pool = pool,
-        _audio = audio,
-        _mode = mode,
-        _onRoundFinished = onRoundFinished,
-        super(null) {
+  }) : _words = words,
+       _pool = pool,
+       _audio = audio,
+       _mode = mode,
+       _totalSyllables = totalSyllables,
+       _onRoundFinished = onRoundFinished,
+       super(null) {
     nextRound();
   }
 
@@ -48,9 +52,10 @@ class GameNotifier extends StateNotifier<RoundState?> {
     final word = _pickWord();
     _previousWord = word;
     final correct = word.syllables;
+    final extras = (_totalSyllables - correct.length).clamp(0, 99);
     final distractors = _pool.randomDistractors(
       exclude: correct,
-      count: _mode.extraSyllables,
+      count: extras,
     );
     final available = [...correct, ...distractors]..shuffle(_random);
 
@@ -105,6 +110,12 @@ class GameNotifier extends StateNotifier<RoundState?> {
 
   void onSyllableDragStart(Syllable syllable) {
     HapticFeedback.selectionClick();
+    // Ребёнок начал тащить — прерываем озвучку слова по слогам.
+    _audio.stopWordPlayer();
+    final s = state;
+    if (s != null && s.highlightedSyllableIndex != null) {
+      state = s.copyWith(clearHighlight: true);
+    }
     if (_mode.syllableAudioOnDrag) {
       _audio.playSyllable(syllable);
     }
@@ -193,9 +204,6 @@ class GameNotifier extends StateNotifier<RoundState?> {
     final current = state;
     if (current == null) return;
     _audio.playUi('success');
-    Future.delayed(const Duration(milliseconds: 600), () {
-      if (mounted) _audio.playWord(current.word);
-    });
     final stars = _calcStars(current);
     final mistakes = <String, int>{};
     for (var i = 0; i < current.word.syllables.length; i++) {

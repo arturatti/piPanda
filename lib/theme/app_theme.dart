@@ -24,28 +24,35 @@ class AppTheme {
   static const Color starGold = Color(0xFFFFC93C);
   static const Color starEmpty = Color(0xFFE5DDD3);
 
-  static List<BoxShadow> softShadow({double y = 5, double blur = 15, double alpha = 0.20}) => [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: alpha),
-          offset: Offset(0, y),
-          blurRadius: blur,
-        ),
-      ];
+  static List<BoxShadow> softShadow({
+    double y = 5,
+    double blur = 15,
+    double alpha = 0.20,
+  }) => [
+    BoxShadow(
+      color: Colors.black.withValues(alpha: alpha),
+      offset: Offset(0, y),
+      blurRadius: blur,
+    ),
+  ];
 
   static List<BoxShadow> chunkyShadow({Color? color}) => [
-        BoxShadow(
-          color: (color ?? Colors.black).withValues(alpha: 0.25),
-          offset: const Offset(0, 6),
-          blurRadius: 0,
-        ),
-      ];
+    BoxShadow(
+      color: (color ?? Colors.black).withValues(alpha: 0.25),
+      offset: const Offset(0, 6),
+      blurRadius: 0,
+    ),
+  ];
 
   static LinearGradient cardGradient({Color? base}) {
     final b = base ?? Colors.white;
     return LinearGradient(
       begin: Alignment.topCenter,
       end: Alignment.bottomCenter,
-      colors: [Colors.white, Color.alphaBlend(b.withValues(alpha: 0.18), Colors.white)],
+      colors: [
+        Colors.white,
+        Color.alphaBlend(b.withValues(alpha: 0.18), Colors.white),
+      ],
     );
   }
 
@@ -83,10 +90,9 @@ class AppTheme {
     return base.copyWith(
       colorScheme: colorScheme,
       scaffoldBackgroundColor: background,
-      textTheme: GoogleFonts.comfortaaTextTheme(base.textTheme).apply(
-        bodyColor: textDark,
-        displayColor: textDark,
-      ),
+      textTheme: GoogleFonts.comfortaaTextTheme(
+        base.textTheme,
+      ).apply(bodyColor: textDark, displayColor: textDark),
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,

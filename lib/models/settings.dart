@@ -3,12 +3,14 @@ class AppSettings {
   final bool soundEffects;
   final bool animations;
   final bool backgroundMusic;
+  final int totalSyllables;
 
   const AppSettings({
     required this.volume,
     required this.soundEffects,
     required this.animations,
     required this.backgroundMusic,
+    required this.totalSyllables,
   });
 
   static const defaults = AppSettings(
@@ -16,6 +18,7 @@ class AppSettings {
     soundEffects: true,
     animations: true,
     backgroundMusic: true,
+    totalSyllables: 8,
   );
 
   AppSettings copyWith({
@@ -23,12 +26,14 @@ class AppSettings {
     bool? soundEffects,
     bool? animations,
     bool? backgroundMusic,
+    int? totalSyllables,
   }) {
     return AppSettings(
       volume: volume ?? this.volume,
       soundEffects: soundEffects ?? this.soundEffects,
       animations: animations ?? this.animations,
       backgroundMusic: backgroundMusic ?? this.backgroundMusic,
+      totalSyllables: totalSyllables ?? this.totalSyllables,
     );
   }
 }

@@ -6,6 +6,7 @@ class SettingsService {
   static const _kSoundEffects = 'settings.sfx';
   static const _kAnimations = 'settings.animations';
   static const _kBackgroundMusic = 'settings.bgm';
+  static const _kTotalSyllables = 'settings.totalSyllables';
 
   Future<AppSettings> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -16,7 +17,11 @@ class SettingsService {
       animations:
           prefs.getBool(_kAnimations) ?? AppSettings.defaults.animations,
       backgroundMusic:
-          prefs.getBool(_kBackgroundMusic) ?? AppSettings.defaults.backgroundMusic,
+          prefs.getBool(_kBackgroundMusic) ??
+          AppSettings.defaults.backgroundMusic,
+      totalSyllables:
+          prefs.getInt(_kTotalSyllables) ??
+          AppSettings.defaults.totalSyllables,
     );
   }
 
@@ -26,5 +31,6 @@ class SettingsService {
     await prefs.setBool(_kSoundEffects, s.soundEffects);
     await prefs.setBool(_kAnimations, s.animations);
     await prefs.setBool(_kBackgroundMusic, s.backgroundMusic);
+    await prefs.setInt(_kTotalSyllables, s.totalSyllables);
   }
 }

@@ -127,27 +127,27 @@ class _Menu extends StatelessWidget {
           label: 'Играть',
           icon: Icons.play_arrow_rounded,
           color: AppTheme.primary,
-          onTap: () => Navigator.of(context).push(
-            fadeScalePageRoute((_) => const WordSetSelectScreen()),
-          ),
+          onTap: () => Navigator.of(
+            context,
+          ).push(fadeScalePageRoute((_) => const WordSetSelectScreen())),
         ),
         SizedBox(height: 14 * s),
         _ChunkyButton(
           label: 'Прогресс',
           icon: Icons.emoji_events_rounded,
           color: AppTheme.mint,
-          onTap: () => Navigator.of(context).push(
-            fadeScalePageRoute((_) => const StatsScreen()),
-          ),
+          onTap: () => Navigator.of(
+            context,
+          ).push(fadeScalePageRoute((_) => const StatsScreen())),
         ),
         SizedBox(height: 14 * s),
         _ChunkyButton(
           label: 'Настройки',
           icon: Icons.settings_rounded,
           color: AppTheme.sky,
-          onTap: () => Navigator.of(context).push(
-            fadeScalePageRoute((_) => const SettingsScreen()),
-          ),
+          onTap: () => Navigator.of(
+            context,
+          ).push(fadeScalePageRoute((_) => const SettingsScreen())),
         ),
       ],
     );

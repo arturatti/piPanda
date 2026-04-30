@@ -30,8 +30,7 @@ class ModeSelectScreen extends StatelessWidget {
                 mainAxisSpacing: 14 * s,
                 childAspectRatio: 0.95,
                 children: [
-                  for (final mode in GameMode.all)
-                    _ModeCard(mode: mode),
+                  for (final mode in GameMode.all) _ModeCard(mode: mode),
                 ],
               );
             },
@@ -65,9 +64,9 @@ class _ModeCardState extends State<_ModeCard> {
         child: InkWell(
           borderRadius: BorderRadius.circular(24 * s),
           onHighlightChanged: (v) => setState(() => _pressed = v),
-          onTap: () => Navigator.of(context).push(
-            fadeScalePageRoute((_) => GameScreen(mode: mode)),
-          ),
+          onTap: () => Navigator.of(
+            context,
+          ).push(fadeScalePageRoute((_) => GameScreen(mode: mode))),
           child: Container(
             padding: EdgeInsets.all(16 * s),
             decoration: BoxDecoration(

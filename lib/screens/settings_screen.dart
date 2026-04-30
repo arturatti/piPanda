@@ -27,26 +27,12 @@ class SettingsScreen extends ConsumerWidget {
                 title: 'Громкость',
                 icon: Icons.volume_up_rounded,
                 color: AppTheme.sky,
-                child: Row(
-                  children: [
-                    const Icon(Icons.volume_down, color: AppTheme.textMuted),
-                    Expanded(
-                      child: SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor: AppTheme.primary,
-                          thumbColor: AppTheme.primary,
-                          overlayColor: AppTheme.primary.withValues(alpha: 0.2),
-                          inactiveTrackColor: AppTheme.starEmpty,
-                          trackHeight: 6,
-                        ),
-                        child: Slider(
-                          value: settings.volume,
-                          onChanged: notifier.setVolume,
-                        ),
-                      ),
-                    ),
-                    const Icon(Icons.volume_up, color: AppTheme.textMuted),
-                  ],
+                wide: true,
+                child: Slider(
+                  value: settings.volume,
+                  activeColor: AppTheme.primary,
+                  inactiveColor: AppTheme.starEmpty,
+                  onChanged: notifier.setVolume,
                 ),
               ),
               _Section(
@@ -56,7 +42,7 @@ class SettingsScreen extends ConsumerWidget {
                 child: Switch(
                   value: settings.soundEffects,
                   onChanged: notifier.setSoundEffects,
-                  activeThumbColor: AppTheme.sunshine,
+                  activeColor: AppTheme.sunshine,
                 ),
               ),
               _Section(
@@ -66,7 +52,7 @@ class SettingsScreen extends ConsumerWidget {
                 child: Switch(
                   value: settings.animations,
                   onChanged: notifier.setAnimations,
-                  activeThumbColor: AppTheme.violet,
+                  activeColor: AppTheme.violet,
                 ),
               ),
               _Section(
@@ -76,7 +62,36 @@ class SettingsScreen extends ConsumerWidget {
                 child: Switch(
                   value: settings.backgroundMusic,
                   onChanged: notifier.setBackgroundMusic,
-                  activeThumbColor: AppTheme.mint,
+                  activeColor: AppTheme.mint,
+                ),
+              ),
+              _Section(
+                title: 'Слогов в задаче',
+                icon: Icons.dialpad_rounded,
+                color: AppTheme.primary,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    for (final n in const [6, 8, 10])
+                      Padding(
+                        padding: const EdgeInsets.only(left: 6),
+                        child: ChoiceChip(
+                          label: Text(
+                            '$n',
+                            style: TextStyle(
+                              fontSize: 16 * s,
+                              fontWeight: FontWeight.w800,
+                              color: settings.totalSyllables == n
+                                  ? Colors.white
+                                  : AppTheme.textDark,
+                            ),
+                          ),
+                          selected: settings.totalSyllables == n,
+                          selectedColor: AppTheme.primary,
+                          onSelected: (_) => notifier.setTotalSyllables(n),
+                        ),
+                      ),
+                  ],
                 ),
               ),
               SizedBox(height: 24 * s),
@@ -105,7 +120,9 @@ class SettingsScreen extends ConsumerWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Сбросить прогресс?'),
-        content: const Text('Вся статистика будет удалена. Это нельзя отменить.'),
+        content: const Text(
+          'Вся статистика будет удалена. Это нельзя отменить.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
@@ -129,17 +146,45 @@ class _Section extends StatelessWidget {
   final IconData icon;
   final Color color;
   final Widget child;
+  final bool wide;
 
   const _Section({
     required this.title,
     required this.icon,
     required this.color,
     required this.child,
+    this.wide = false,
   });
 
   @override
   Widget build(BuildContext context) {
     final s = tabletScale(context);
+    final header = Row(
+      children: [
+        Container(
+          width: 44 * s,
+          height: 44 * s,
+          decoration: BoxDecoration(
+            color: color.withValues(alpha: 0.18),
+            borderRadius: BorderRadius.circular(14 * s),
+          ),
+          alignment: Alignment.center,
+          child: Icon(icon, color: color, size: 24 * s),
+        ),
+        SizedBox(width: 12 * s),
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 17 * s,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.textDark,
+            ),
+          ),
+        ),
+        if (!wide) child,
+      ],
+    );
     return Container(
       margin: EdgeInsets.only(bottom: 12 * s),
       padding: EdgeInsets.symmetric(horizontal: 14 * s, vertical: 10 * s),
@@ -154,32 +199,12 @@ class _Section extends StatelessWidget {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 44 * s,
-            height: 44 * s,
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.18),
-              borderRadius: BorderRadius.circular(14 * s),
-            ),
-            alignment: Alignment.center,
-            child: Icon(icon, color: color, size: 24 * s),
-          ),
-          SizedBox(width: 12 * s),
-          Expanded(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 17 * s,
-                fontWeight: FontWeight.w700,
-                color: AppTheme.textDark,
-              ),
-            ),
-          ),
-          child,
-        ],
-      ),
+      child: wide
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [header, child],
+            )
+          : header,
     );
   }
 }

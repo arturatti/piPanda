@@ -5,6 +5,10 @@ import 'package:syllables_apk/models/syllable.dart';
 import 'package:syllables_apk/models/word.dart';
 
 class AudioService {
+  // Yandex SpeechKit отдаёт WAV для слогов и слов; UI/BGM из Mixkit — MP3.
+  static const _voiceExts = ['wav', 'mp3', 'm4a', 'ogg'];
+  static const _uiExts = ['mp3', 'wav', 'm4a', 'ogg'];
+
   final AudioPlayer _wordPlayer = AudioPlayer();
   final AudioPlayer _sfxPlayer = AudioPlayer();
   double _volume = 1.0;
@@ -18,16 +22,27 @@ class AudioService {
   }
 
   Future<void> playSyllable(Syllable syllable) {
-    return _playOn(_sfxPlayer, 'assets/audio/syllables/${syllable.audioKey}');
+    return _playOn(
+      _sfxPlayer,
+      'assets/audio/syllables/${syllable.audioKey}',
+      _voiceExts,
+    );
   }
 
   Future<void> playWord(Word word) {
-    return _playOn(_wordPlayer, 'assets/audio/words/${word.audioKey}');
+    return _playOn(
+      _wordPlayer,
+      'assets/audio/words/${word.audioKey}',
+      _voiceExts,
+    );
   }
 
   Future<void> playUi(String name) {
     if (!_soundEffects) return Future.value();
-    return _playOn(_sfxPlayer, 'assets/audio/ui/$name');
+    // Important UI cues (success) play on the word player so they aren't cut off
+    // by syllable drag/drop sounds on the SFX player.
+    final player = name == 'success' ? _wordPlayer : _sfxPlayer;
+    return _playOn(player, 'assets/audio/ui/$name', _uiExts);
   }
 
   Future<void> playWordBySyllables(
@@ -44,6 +59,7 @@ class AudioService {
       final played = await _playAndWaitOn(
         _wordPlayer,
         'assets/audio/syllables/${word.syllables[i].audioKey}',
+        _voiceExts,
       );
       if (!played) {
         await Future.delayed(const Duration(milliseconds: 350));
@@ -61,9 +77,13 @@ class AudioService {
     } catch (_) {}
   }
 
-  Future<void> _playOn(AudioPlayer player, String basePath) async {
+  Future<void> _playOn(
+    AudioPlayer player,
+    String basePath,
+    List<String> exts,
+  ) async {
     if (_volume <= 0) return;
-    for (final ext in const ['mp3', 'wav', 'm4a', 'ogg']) {
+    for (final ext in exts) {
       if (await _setAndPlay(player, '$basePath.$ext')) return;
     }
   }
@@ -80,9 +100,13 @@ class AudioService {
     }
   }
 
-  Future<bool> _playAndWaitOn(AudioPlayer player, String basePath) async {
+  Future<bool> _playAndWaitOn(
+    AudioPlayer player,
+    String basePath,
+    List<String> exts,
+  ) async {
     if (_volume <= 0) return false;
-    for (final ext in const ['mp3', 'wav', 'm4a', 'ogg']) {
+    for (final ext in exts) {
       try {
         await player.stop();
         await player.setAsset('$basePath.$ext');
@@ -90,7 +114,10 @@ class AudioService {
         await player.play();
         await player.processingStateStream
             .firstWhere((s) => s == ProcessingState.completed)
-            .timeout(const Duration(seconds: 4), onTimeout: () => ProcessingState.completed);
+            .timeout(
+              const Duration(seconds: 4),
+              onTimeout: () => ProcessingState.completed,
+            );
         return true;
       } catch (_) {
         continue;

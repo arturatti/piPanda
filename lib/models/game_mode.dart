@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:syllables_apk/theme/app_theme.dart';
 
-enum GameModeId {
-  baby,
-  basic,
-  noImage,
-  audioOnly,
-  hardcore,
-}
+enum GameModeId { baby, basic, noImage, audioOnly, hardcore }
 
 class GameMode {
   final GameModeId id;

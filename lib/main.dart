@@ -1,10 +1,25 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syllables_apk/screens/home_screen.dart';
 import 'package:syllables_apk/state/providers.dart';
 import 'package:syllables_apk/theme/app_theme.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (!kIsWeb) {
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
+        systemNavigationBarColor: AppTheme.background,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
   runApp(const ProviderScope(child: SyllablesApp()));
 }
 
@@ -29,7 +44,8 @@ class _AppRoot extends ConsumerStatefulWidget {
   ConsumerState<_AppRoot> createState() => _AppRootState();
 }
 
-class _AppRootState extends ConsumerState<_AppRoot> with WidgetsBindingObserver {
+class _AppRootState extends ConsumerState<_AppRoot>
+    with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -64,9 +80,8 @@ class _AppRootState extends ConsumerState<_AppRoot> with WidgetsBindingObserver 
     ref.watch(bgmServiceProvider);
     final words = ref.watch(wordsProvider);
     return words.when(
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
+      loading: () =>
+          const Scaffold(body: Center(child: CircularProgressIndicator())),
       error: (e, _) => Scaffold(
         body: Center(
           child: Padding(

@@ -69,9 +69,9 @@ class _SetCardState extends State<_SetCard> {
           onHighlightChanged: (v) => setState(() => _pressed = v),
           onTap: () {
             widget.ref.read(currentWordSetProvider.notifier).state = set;
-            Navigator.of(context).push(
-              fadeScalePageRoute((_) => const ModeSelectScreen()),
-            );
+            Navigator.of(
+              context,
+            ).push(fadeScalePageRoute((_) => const ModeSelectScreen()));
           },
           child: Container(
             padding: EdgeInsets.all(16 * s),
@@ -91,14 +91,22 @@ class _SetCardState extends State<_SetCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                  width: 72 * s,
-                  height: 72 * s,
+                  width: 110 * s,
+                  height: 110 * s,
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.25),
+                    color: Colors.white.withValues(alpha: 0.30),
                     shape: BoxShape.circle,
                   ),
+                  padding: EdgeInsets.all(8 * s),
                   alignment: Alignment.center,
-                  child: Icon(set.icon, color: Colors.white, size: 40 * s),
+                  child: set.heroImage != null
+                      ? Image.asset(
+                          set.heroImage!,
+                          fit: BoxFit.contain,
+                          errorBuilder: (_, _, _) =>
+                              Icon(set.icon, color: Colors.white, size: 56 * s),
+                        )
+                      : Icon(set.icon, color: Colors.white, size: 56 * s),
                 ),
                 SizedBox(height: 14 * s),
                 Text(

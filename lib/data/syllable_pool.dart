@@ -21,7 +21,9 @@ class SyllablePool {
     required int count,
   }) {
     final excludeTexts = exclude.map((s) => s.text).toSet();
-    final candidates = all.where((s) => !excludeTexts.contains(s.text)).toList();
+    final candidates = all
+        .where((s) => !excludeTexts.contains(s.text))
+        .toList();
     candidates.shuffle();
     return candidates.take(count).toList();
   }

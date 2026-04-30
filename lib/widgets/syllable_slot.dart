@@ -50,20 +50,20 @@ class SyllableSlot extends StatelessWidget {
                     colors: [Color(0xFFFFD9B8), Color(0xFFFFB997)],
                   )
                 : (hovered || highlight)
-                    ? const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [Color(0xFFFFEFC1), Color(0xFFFFE08A)],
-                      )
-                    : null,
+                ? const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFFFFEFC1), Color(0xFFFFE08A)],
+                  )
+                : null,
             color: filled || hovered || highlight ? null : AppTheme.slotEmpty,
             borderRadius: BorderRadius.circular(20 * s),
             border: Border.all(
               color: filled
                   ? AppTheme.primary
                   : (hovered || highlight)
-                      ? AppTheme.sunshine
-                      : AppTheme.primary.withValues(alpha: 0.35),
+                  ? AppTheme.sunshine
+                  : AppTheme.primary.withValues(alpha: 0.35),
               width: filled ? 3 : (highlight ? 3 : 2.5),
             ),
             boxShadow: filled
@@ -75,14 +75,14 @@ class SyllableSlot extends StatelessWidget {
                     ),
                   ]
                 : highlight
-                    ? [
-                        BoxShadow(
-                          color: AppTheme.sunshine.withValues(alpha: 0.50),
-                          offset: const Offset(0, 0),
-                          blurRadius: 16,
-                        ),
-                      ]
-                    : null,
+                ? [
+                    BoxShadow(
+                      color: AppTheme.sunshine.withValues(alpha: 0.50),
+                      offset: const Offset(0, 0),
+                      blurRadius: 16,
+                    ),
+                  ]
+                : null,
           ),
           alignment: Alignment.center,
           child: AnimatedSwitcher(
@@ -95,7 +95,10 @@ class SyllableSlot extends StatelessWidget {
             child: filled
                 ? Padding(
                     key: ValueKey(filledWith!.text),
-                    padding: EdgeInsets.symmetric(horizontal: 6 * s, vertical: 4 * s),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 6 * s,
+                      vertical: 4 * s,
+                    ),
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
@@ -115,10 +118,9 @@ class SyllableSlot extends StatelessWidget {
         );
 
         if (isHinted && animationsEnabled) {
-          child = child.animate(onPlay: (c) => c.repeat()).shimmer(
-                duration: 900.ms,
-                color: AppTheme.sunshine,
-              );
+          child = child
+              .animate(onPlay: (c) => c.repeat())
+              .shimmer(duration: 900.ms, color: AppTheme.sunshine);
         } else if (!filled && animationsEnabled) {
           child = child
               .animate(onPlay: (c) => c.repeat(reverse: true))

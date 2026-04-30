@@ -28,7 +28,11 @@ class _SyllableCardState extends State<SyllableCard> {
 
   @override
   Widget build(BuildContext context) {
-    final card = _buildCard(context, widget.syllable.text.toUpperCase(), pressed: _pressed);
+    final card = _buildCard(
+      context,
+      widget.syllable.text.toUpperCase(),
+      pressed: _pressed,
+    );
 
     if (!widget.draggable) return card;
 
@@ -46,7 +50,11 @@ class _SyllableCardState extends State<SyllableCard> {
           type: MaterialType.transparency,
           child: Transform.scale(
             scale: 1.12,
-            child: _buildCard(context, widget.syllable.text.toUpperCase(), elevated: true),
+            child: _buildCard(
+              context,
+              widget.syllable.text.toUpperCase(),
+              elevated: true,
+            ),
           ),
         ),
         childWhenDragging: Opacity(
@@ -63,7 +71,12 @@ class _SyllableCardState extends State<SyllableCard> {
     );
   }
 
-  Widget _buildCard(BuildContext context, String text, {bool pressed = false, bool elevated = false}) {
+  Widget _buildCard(
+    BuildContext context,
+    String text, {
+    bool pressed = false,
+    bool elevated = false,
+  }) {
     final s = tabletScale(context);
     final w = widget.width ?? 84 * s;
     final h = widget.height ?? 72 * s;
@@ -74,10 +87,7 @@ class _SyllableCardState extends State<SyllableCard> {
         gradient: const LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Colors.white,
-            Color(0xFFFFF1DB),
-          ],
+          colors: [Colors.white, Color(0xFFFFF1DB)],
         ),
         borderRadius: BorderRadius.circular(20 * s),
         border: Border.all(color: AppTheme.primary, width: 2.5),

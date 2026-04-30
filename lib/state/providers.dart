@@ -79,12 +79,17 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
     state = state.copyWith(backgroundMusic: v);
     await _service.save(state);
   }
+
+  Future<void> setTotalSyllables(int v) async {
+    state = state.copyWith(totalSyllables: v);
+    await _service.save(state);
+  }
 }
 
 final settingsNotifierProvider =
     StateNotifierProvider<SettingsNotifier, AppSettings>((ref) {
-  return SettingsNotifier(ref.watch(settingsServiceProvider));
-});
+      return SettingsNotifier(ref.watch(settingsServiceProvider));
+    });
 
 final audioServiceProvider = Provider<AudioService>((ref) {
   final service = AudioService();
@@ -145,27 +150,32 @@ class ProgressNotifier extends StateNotifier<OverallProgress> {
 
 final progressNotifierProvider =
     StateNotifierProvider<ProgressNotifier, OverallProgress>((ref) {
-  return ProgressNotifier(ref.watch(progressServiceProvider));
-});
+      return ProgressNotifier(ref.watch(progressServiceProvider));
+    });
 
 final gameNotifierProvider = StateNotifierProvider.autoDispose
     .family<GameNotifier, RoundState?, GameMode>((ref, mode) {
-  final words = ref.watch(wordsProvider).requireValue;
-  final pool = ref.watch(syllablePoolProvider);
-  final audio = ref.watch(audioServiceProvider);
-  final progress = ref.read(progressNotifierProvider.notifier);
-  return GameNotifier(
-    words: words,
-    pool: pool,
-    audio: audio,
-    mode: mode,
-    onRoundFinished: ({required word, required mistakesPerSyllable, required stars}) {
-      final set = ref.read(currentWordSetProvider);
-      progress.recordRound(
-        wordKey: '${set.id.name}:${word.text}',
-        mistakes: mistakesPerSyllable,
-        stars: stars,
+      final words = ref.watch(wordsProvider).requireValue;
+      final pool = ref.watch(syllablePoolProvider);
+      final audio = ref.watch(audioServiceProvider);
+      final totalSyllables = ref.watch(
+        settingsNotifierProvider.select((s) => s.totalSyllables),
       );
-    },
-  );
-});
+      final progress = ref.read(progressNotifierProvider.notifier);
+      return GameNotifier(
+        words: words,
+        pool: pool,
+        audio: audio,
+        mode: mode,
+        totalSyllables: totalSyllables,
+        onRoundFinished:
+            ({required word, required mistakesPerSyllable, required stars}) {
+              final set = ref.read(currentWordSetProvider);
+              progress.recordRound(
+                wordKey: '${set.id.name}:${word.text}',
+                mistakes: mistakesPerSyllable,
+                stars: stars,
+              );
+            },
+      );
+    });

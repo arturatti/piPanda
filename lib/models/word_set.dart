@@ -8,6 +8,7 @@ class WordSet {
   final String title;
   final String description;
   final IconData icon;
+  final String? heroImage;
   final Color color;
   final String dataPath;
   final String imagesSubdir;
@@ -17,6 +18,7 @@ class WordSet {
     required this.title,
     required this.description,
     required this.icon,
+    this.heroImage,
     required this.color,
     required this.dataPath,
     required this.imagesSubdir,
@@ -27,6 +29,7 @@ class WordSet {
     title: 'Стандартный',
     description: 'Знакомые слова',
     icon: Icons.menu_book_rounded,
+    heroImage: 'assets/images/words/standard/raduga.png',
     color: AppTheme.sunshine,
     dataPath: 'assets/data/standard/words.txt',
     imagesSubdir: 'standard',
@@ -37,6 +40,7 @@ class WordSet {
     title: 'Динозавры',
     description: 'Древние ящеры',
     icon: Icons.pets_rounded,
+    heroImage: 'assets/images/words/dinosaurs/tirannozavr.png',
     color: AppTheme.success,
     dataPath: 'assets/data/dinosaurs/words.txt',
     imagesSubdir: 'dinosaurs',
@@ -47,6 +51,7 @@ class WordSet {
     title: 'Рептилии',
     description: 'Ящеры и амфибии',
     icon: Icons.eco_rounded,
+    heroImage: 'assets/images/words/reptiles/drakon.png',
     color: AppTheme.sky,
     dataPath: 'assets/data/reptiles/words.txt',
     imagesSubdir: 'reptiles',

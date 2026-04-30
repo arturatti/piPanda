@@ -30,14 +30,13 @@ class _GameScreenState extends ConsumerState<GameScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(gameNotifierProvider(widget.mode));
     final notifier = ref.read(gameNotifierProvider(widget.mode).notifier);
-    final animationsEnabled =
-        ref.watch(settingsNotifierProvider.select((s) => s.animations));
+    final animationsEnabled = ref.watch(
+      settingsNotifierProvider.select((s) => s.animations),
+    );
     final scale = tabletScale(context);
 
     if (state == null) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     if (state.finished && !_scheduledNext) {
@@ -84,7 +83,8 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               final spacing = (maxH * 0.012).clamp(6.0, 14.0 * scale);
               final speakerSize = (maxH * 0.10).clamp(40.0, 72.0 * scale);
 
-              final totalCards = state.word.syllables.length + widget.mode.extraSyllables;
+              final totalCards =
+                  state.word.syllables.length + widget.mode.extraSyllables;
               final cardW = ((maxW - 24 - (totalCards - 1) * 8) / totalCards)
                   .clamp(54.0, 110.0 * scale);
               final cardH = cardW * 0.86;
@@ -112,10 +112,18 @@ class _GameScreenState extends ConsumerState<GameScreen> {
                 cardH: cardH,
               );
 
+              final placedFlags = [
+                for (final slot in state.filledSlots) slot != null,
+              ];
+              final nextSlotIndex = state.filledSlots.indexWhere(
+                (s) => s == null,
+              );
               final wordRow = widget.mode.showWord
                   ? _WordRow(
                       syllables: state.word.syllables,
                       highlightIndex: state.highlightedSyllableIndex,
+                      placedFlags: placedFlags,
+                      nextIndex: nextSlotIndex >= 0 ? nextSlotIndex : null,
                       fontSize: wordFontSize,
                       animationsEnabled: animationsEnabled,
                     )
@@ -165,24 +173,26 @@ class _GameScreenState extends ConsumerState<GameScreen> {
               } else if (widget.mode.showWord) {
                 children = [
                   const Spacer(flex: 2),
-                  wordRow,
+                  Center(child: wordRow),
                   SizedBox(height: spacing * 1.5),
-                  slotsRow,
+                  Center(child: slotsRow),
                   const Spacer(flex: 2),
-                  tray,
+                  Center(child: tray),
                   SizedBox(height: spacing),
                 ];
               } else {
                 children = [
                   const Spacer(flex: 3),
-                  slotsRow,
+                  Center(child: slotsRow),
                   SizedBox(height: spacing * 1.6),
-                  _SpeakerButton(
-                    size: speakerSize,
-                    onTap: notifier.replayWordBySyllables,
+                  Center(
+                    child: _SpeakerButton(
+                      size: speakerSize,
+                      onTap: notifier.replayWordBySyllables,
+                    ),
                   ),
                   const Spacer(flex: 2),
-                  tray,
+                  Center(child: tray),
                   SizedBox(height: spacing),
                 ];
               }
@@ -245,12 +255,7 @@ class _TappableImageState extends State<_TappableImage> {
     if (widget.animationsEnabled) {
       image = image
           .animate(onPlay: (c) => c.repeat(reverse: true))
-          .moveY(
-            begin: 0,
-            end: -6,
-            duration: 1800.ms,
-            curve: Curves.easeInOut,
-          );
+          .moveY(begin: 0, end: -6, duration: 1800.ms, curve: Curves.easeInOut);
     }
 
     return GestureDetector(
@@ -270,12 +275,16 @@ class _TappableImageState extends State<_TappableImage> {
 class _WordRow extends StatelessWidget {
   final List<Syllable> syllables;
   final int? highlightIndex;
+  final List<bool> placedFlags;
+  final int? nextIndex;
   final double fontSize;
   final bool animationsEnabled;
 
   const _WordRow({
     required this.syllables,
     required this.highlightIndex,
+    required this.placedFlags,
+    required this.nextIndex,
     required this.fontSize,
     required this.animationsEnabled,
   });
@@ -294,6 +303,9 @@ class _WordRow extends StatelessWidget {
                 text: syllables[i].text.toUpperCase(),
                 fontSize: fontSize,
                 highlighted: highlightIndex == i,
+                placed: i < placedFlags.length && placedFlags[i],
+                isNext: nextIndex == i,
+                animationsEnabled: animationsEnabled,
               ),
               if (i < syllables.length - 1)
                 SizedBox(
@@ -321,20 +333,39 @@ class _OutlinedSyllable extends StatelessWidget {
   final String text;
   final double fontSize;
   final bool highlighted;
+  final bool placed;
+  final bool isNext;
+  final bool animationsEnabled;
 
   const _OutlinedSyllable({
     required this.text,
     required this.fontSize,
     required this.highlighted,
+    required this.placed,
+    required this.isNext,
+    required this.animationsEnabled,
   });
 
   @override
   Widget build(BuildContext context) {
-    final fillColor = highlighted ? AppTheme.primary : AppTheme.textDark;
-    final strokeColor = highlighted
-        ? Colors.white
-        : Colors.white;
+    final Color fillColor;
+    if (placed) {
+      fillColor = AppTheme.success;
+    } else if (highlighted) {
+      fillColor = AppTheme.primary;
+    } else {
+      fillColor = AppTheme.textDark;
+    }
+
     final strokeWidth = (fontSize * 0.10).clamp(3.0, 10.0);
+    final showGlow = isNext && !placed;
+    final scale = placed
+        ? 1.0
+        : highlighted
+        ? 1.1
+        : isNext
+        ? 1.05
+        : 1.0;
 
     final base = TextStyle(
       fontSize: fontSize,
@@ -343,29 +374,56 @@ class _OutlinedSyllable extends StatelessWidget {
       height: 1.0,
     );
 
+    Widget text1 = Stack(
+      alignment: Alignment.center,
+      children: [
+        Text(
+          text,
+          style: GoogleFonts.comfortaa(textStyle: base).copyWith(
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = strokeWidth.toDouble()
+              ..strokeJoin = StrokeJoin.round
+              ..color = Colors.white,
+          ),
+        ),
+        Text(
+          text,
+          style: GoogleFonts.comfortaa(textStyle: base).copyWith(
+            color: fillColor,
+            shadows: showGlow
+                ? [
+                    Shadow(
+                      color: AppTheme.sunshine.withValues(alpha: 0.85),
+                      blurRadius: fontSize * 0.35,
+                    ),
+                    Shadow(
+                      color: AppTheme.primary.withValues(alpha: 0.55),
+                      blurRadius: fontSize * 0.55,
+                    ),
+                  ]
+                : null,
+          ),
+        ),
+      ],
+    );
+
+    if (showGlow && animationsEnabled) {
+      text1 = text1
+          .animate(onPlay: (c) => c.repeat(reverse: true))
+          .scaleXY(
+            begin: 1.0,
+            end: 1.06,
+            duration: 900.ms,
+            curve: Curves.easeInOut,
+          );
+    }
+
     return AnimatedScale(
-      scale: highlighted ? 1.1 : 1.0,
+      scale: scale,
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeOutBack,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Text(
-            text,
-            style: GoogleFonts.comfortaa(textStyle: base).copyWith(
-              foreground: Paint()
-                ..style = PaintingStyle.stroke
-                ..strokeWidth = strokeWidth.toDouble()
-                ..strokeJoin = StrokeJoin.round
-                ..color = strokeColor,
-            ),
-          ),
-          Text(
-            text,
-            style: GoogleFonts.comfortaa(textStyle: base).copyWith(color: fillColor),
-          ),
-        ],
-      ),
+      child: text1,
     );
   }
 }
