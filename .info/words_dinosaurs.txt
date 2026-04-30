@@ -1,0 +1,15 @@
+Раптор|Рап-тор|raptor.png
+Динозавр|Ди-но-завр|dinozavr.png
+Стегозавр|Сте-го-завр|stegozavr.png
+Бронтозавр|Брон-то-завр|brontozavr.png
+Аллозавр|Ал-ло-завр|allozavr.png
+Спинозавр|Спи-но-завр|spinozavr.png
+Диплодок|Дип-ло-док|diplodok.png
+Тарбозавр|Тар-бо-завр|tarbozavr.png
+Карнозавр|Кар-но-завр|karnozavr.png
+Гадрозавр|Гад-ро-завр|gadrozavr.png
+Тираннозавр|Ти-ран-но-завр|tirannozavr.png
+Трицератопс|Три-це-ра-топс|tritseratops.png
+Птеродактиль|Пте-ро-дак-тиль|pterodaktil.png
+Анкилозавр|Ан-ки-ло-завр|ankilozavr.png
+Дилофозавр|Ди-ло-фо-завр|dilofozavr.png

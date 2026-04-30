@@ -1,0 +1,61 @@
+name: syllables_apk
+description: "Игра для обучения слоговому чтению"
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flutter_riverpod: ^2.6.1
+  just_audio: ^0.9.42
+  shared_preferences: ^2.3.3
+  path_provider: ^2.1.5
+  flutter_animate: ^4.5.2
+  confetti: ^0.8.0
+  google_fonts: ^6.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+  flutter_native_splash: ^2.4.6
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/data/standard/
+    - assets/data/dinosaurs/
+    - assets/data/reptiles/
+    - assets/icon/
+    - assets/images/words/standard/
+    - assets/images/words/dinosaurs/
+    - assets/images/words/reptiles/
+    - assets/images/backgrounds/
+    - assets/images/mascot/
+    - assets/audio/syllables/
+    - assets/audio/words/
+    - assets/audio/ui/
+    - assets/audio/bgm/
+
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: "assets/icon/icon.png"
+  min_sdk_android: 21
+  adaptive_icon_background: "#FF7B5C"
+  adaptive_icon_foreground: "assets/icon/icon.png"
+
+flutter_native_splash:
+  color: "#FFF7EF"
+  image: assets/icon/icon.png
+  android: true
+  ios: false
+  android_12:
+    color: "#FFF7EF"
+    image: assets/icon/icon.png

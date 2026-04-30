@@ -1,0 +1,6 @@
+Дракон|Дра-кон|drakon.png
+Крокодил|Кро-ко-дил|krokodil.png
+Игуана|И-гу-а-на|iguana.png
+Ящерица|Я-ще-ри-ца|yashcheritsa.png
+Черепаха|Че-ре-па-ха|cherepaha.png
+Лягушка|Ля-гуш-ка|lyagushka.png

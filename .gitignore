@@ -1,0 +1,84 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.elevenlabs_key
+.gemini_key
+.yandex_key
+android/key.properties
+android/upload-keystore.jks
+android/app/upload-keystore.jks
+.env
+.bootstrap.log
+.build.log
+.verbose.log
+.chatterbox.log
+.rembg.log
+.yandex.log
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+/coverage/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Tooling cache
+.playwright-mcp/
+.serena/
+
+# Asset archives (kept locally, not committed)
+.info/_archive/
+assets/audio/_old/
+assets/audio/_preview_yandex/
+assets/images/words/**/_nobg/
+assets/images/mascot/_nobg/
+
+# Output artifacts (released APK is uploaded separately)
+*.apk
+*.aab
+
+# Playwright/dev screenshots dropped in repo root
+/game_*.png
+/home_*.png
+/mode_*.png
+/word_set_select.png
+
+# Old throwaway copy scripts from early experiments
+/copy_images*.py
+/copy_images*.ps1
+/copy_bg.py
